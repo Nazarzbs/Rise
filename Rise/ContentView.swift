@@ -149,7 +149,53 @@ struct TimelineView: View {
     
     var body: some View {
         ZStack(alignment: .leading) {
+   
+
+
             // Time ruler
+            // Sleep period background
+            GeometryReader { geometry in
+                // Calculate y position and height based on hours
+                let totalHours: CGFloat = 24
+                let hourHeight = geometry.size.height / totalHours
+                let rectY = hourHeight * CGFloat(sleepStart)
+                let rectHeight = hourHeight * CGFloat(sleepEnd - sleepStart)
+                let leftPadding: CGFloat = 35
+                
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Total sleep time")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .bold()
+                    Text("6h 51m")
+                        .font(.headline)
+                       
+                    Spacer().frame(height: 8)
+                }
+                .position(x: (geometry.size.width ) / 2 - 75 , y: rectY - 30)
+              
+              
+                
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(LinearGradient(gradient: Gradient(colors: [Color.purple.opacity(0.65), Color.blue.opacity(0.65)]), startPoint: .top, endPoint: .bottom))
+                    .frame(width: geometry.size.width - leftPadding, height: rectHeight, alignment: .leading)
+                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding, y: rectY + rectHeight/2)
+                    .shadow(radius: 6)
+                
+                VStack {
+                    RoundedRectangle(cornerRadius: 16)
+                        .frame(width: 60, height: 5)
+                        .foregroundColor(.purple)
+                    
+                    Text("6h 51m")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                       
+                }
+                .position(x: (geometry.size.width ) / 2 - 105 , y: rectY + 15)
+            }
+            .allowsHitTesting(false)
+            
             VStack(spacing: 30) {
                 ForEach(0..<25) { hour in
                     VStack(alignment: .center, spacing: 30) {
