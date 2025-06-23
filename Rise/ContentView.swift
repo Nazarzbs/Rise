@@ -149,6 +149,12 @@ struct TimelineView: View {
     let melatoninWindowStart = 24
     let melatoninWindowEnd = 25
     
+    @State private var showAvoidCaffeineSheet = false
+    @State private var showPeakActivitiesSheet = false
+    @State private var showWindDownSheet = false
+    @State private var showMelatoninWindowSheet = false
+    
+    
     var body: some View {
         ZStack(alignment: .leading) {
    
@@ -193,8 +199,6 @@ struct TimelineView: View {
                 .position(x: (geometry.size.width ) / 2 - 85 , y: rectY + 15)
                 
             }
-            .allowsHitTesting(false)
-            
             
             GeometryReader { geometry in
                 let totalHours: CGFloat = 36
@@ -202,12 +206,36 @@ struct TimelineView: View {
                 let rectY = hourHeight * CGFloat(morningPeakStart)
                 let rectHeight = hourHeight * CGFloat(morningPeakEnd - morningPeakStart)
                 let leftPadding: CGFloat = 0
+                let rightPadding: CGFloat = 100
                 
                 RoundedRectangle(cornerRadius: 16)
                     .fill(LinearGradient(gradient: Gradient(colors: [Color.gray.opacity(0.4)]), startPoint: .top, endPoint: .bottom))
-                    .frame(width: geometry.size.width - leftPadding, height: rectHeight - 3, alignment: .leading)
-                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding, y: rectY + rectHeight/2)
+                    .frame(width: geometry.size.width - leftPadding - rightPadding, height: rectHeight - 3, alignment: .leading)
+                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding - rightPadding / 2, y: rectY + rectHeight/2)
                     .shadow(radius: 6)
+                
+                Button(action: {
+                    showAvoidCaffeineSheet = true
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "cup.and.saucer.fill")
+                            .foregroundColor(.orange)
+                            .padding(.leading, 4)
+                        Text("Avoid caffeine")
+                            .foregroundColor(.white)
+                            .font(.footnote)
+                            .bold()
+                        Spacer()
+                    }
+                    .frame(width: 175)
+                    .padding(.vertical, 8)
+                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.gray))
+                }
+                .position(x: geometry.size.width  - 85, y: rectY + rectHeight/2)
+                .sheet(isPresented: $showAvoidCaffeineSheet) {
+                    AvoidCaffeineInfoSheet()
+                        .presentationDetents([.medium, .large])
+                }
                 
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Morning Peak")
@@ -218,16 +246,14 @@ struct TimelineView: View {
                         Circle()
                             .frame(width: 8, height: 8)
                             .foregroundStyle(.yellow)
-                        
                         Text("8m shorter")
                             .font(.footnote)
                             .foregroundColor(.white)
                     }
-                       
+                
                 }
                 .position(x: (geometry.size.width ) / 2 - 85 , y: rectY + 35)
             }
-            .allowsHitTesting(false)
             
             GeometryReader { geometry in
                 let totalHours: CGFloat = 36
@@ -235,11 +261,12 @@ struct TimelineView: View {
                 let rectY = hourHeight * CGFloat(afternoonDipStart)
                 let rectHeight = hourHeight * CGFloat(afternoonDipEnd - afternoonDipStart)
                 let leftPadding: CGFloat = 0
+                let rightPadding: CGFloat = 100
                 
                 RoundedRectangle(cornerRadius: 16)
                     .fill(LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.2)]), startPoint: .top, endPoint: .bottom))
-                    .frame(width: geometry.size.width - leftPadding, height: rectHeight - 3, alignment: .leading)
-                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding, y: rectY + rectHeight/2)
+                    .frame(width: geometry.size.width - leftPadding - rightPadding, height: rectHeight - 3, alignment: .leading)
+                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding - rightPadding / 2, y: rectY + rectHeight/2)
                     .shadow(radius: 6)
                     
                 
@@ -261,7 +288,6 @@ struct TimelineView: View {
                 }
                 .position(x: (geometry.size.width ) / 2 - 85, y: rectY + 35)
             }
-            .allowsHitTesting(false)
             
             GeometryReader { geometry in
                 let totalHours: CGFloat = 36
@@ -269,12 +295,36 @@ struct TimelineView: View {
                 let rectY = hourHeight * CGFloat(eveningPeakStart)
                 let rectHeight = hourHeight * CGFloat(eveningPeakEnd - eveningPeakStart)
                 let leftPadding: CGFloat = 0
+                let rightPadding: CGFloat = 100
                 
                 RoundedRectangle(cornerRadius: 16)
                     .fill(LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.2)]), startPoint: .top, endPoint: .bottom))
-                    .frame(width: geometry.size.width - leftPadding, height: rectHeight - 3, alignment: .leading)
-                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding, y: rectY + rectHeight/2)
+                    .frame(width: geometry.size.width - leftPadding - rightPadding, height: rectHeight - 3, alignment: .leading)
+                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding - rightPadding / 2, y: rectY + rectHeight/2)
                     .shadow(radius: 6)
+                
+                Button(action: {
+                    showPeakActivitiesSheet = true
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "figure.run")
+                            .foregroundColor(.orange)
+                            .padding(.leading, 4)
+                        Text("Peak activities")
+                            .foregroundColor(.white)
+                            .font(.footnote)
+                            .bold()
+                        Spacer()
+                    }
+                    .frame(width: 175)
+                    .padding(.vertical, 8)
+                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.gray))
+                }
+                .position(x: geometry.size.width  - 85, y: rectY + rectHeight/2)
+                .sheet(isPresented: $showPeakActivitiesSheet) {
+                    PeakActivitiesSheet()
+                        .presentationDetents([.medium, .large])
+                }
                     
                 
                 VStack(alignment: .leading, spacing: 3) {
@@ -295,7 +345,6 @@ struct TimelineView: View {
                 }
                 .position(x: (geometry.size.width ) / 2 - 85, y: rectY + 35)
             }
-            .allowsHitTesting(false)
             
             GeometryReader { geometry in
                 let totalHours: CGFloat = 36
@@ -303,13 +352,36 @@ struct TimelineView: View {
                 let rectY = hourHeight * CGFloat(windDownStart)
                 let rectHeight = hourHeight * CGFloat(windDownEnd - windDownStart)
                 let leftPadding: CGFloat = 0
+                let rightPadding: CGFloat = 100
                 
                 RoundedRectangle(cornerRadius: 16)
                     .fill(LinearGradient(gradient: Gradient(colors: [Color.blue.opacity(0.2)]), startPoint: .top, endPoint: .bottom))
-                    .frame(width: geometry.size.width - leftPadding, height: rectHeight - 3, alignment: .leading)
-                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding, y: rectY + rectHeight/2)
+                    .frame(width: geometry.size.width - leftPadding - rightPadding, height: rectHeight - 3, alignment: .leading)
+                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding - rightPadding / 2, y: rectY + rectHeight/2)
                     .shadow(radius: 6)
-                    
+                
+                Button(action: {
+                    showWindDownSheet = true
+                }) {
+                    HStack(spacing: 2) {
+                        Image(systemName: "wind")
+                            .foregroundColor(.orange)
+                            .padding(.leading, 4)
+                        Text("Wind-down activities")
+                            .foregroundColor(.white)
+                            .font(.footnote)
+                            .bold()
+                        Spacer()
+                    }
+                    .frame(width: 175)
+                    .padding(.vertical, 8)
+                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.gray))
+                }
+                .position(x: geometry.size.width  - 85, y: rectY + rectHeight/2)
+                .sheet(isPresented: $showWindDownSheet) {
+                    WindDownSheet()
+                        .presentationDetents([.medium, .large])
+                }
                 
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Wind-down")
@@ -329,7 +401,6 @@ struct TimelineView: View {
                 }
                 .position(x: (geometry.size.width ) / 2 - 85, y: rectY + 35)
             }
-            .allowsHitTesting(false)
             
             GeometryReader { geometry in
                 let totalHours: CGFloat = 36
@@ -337,12 +408,36 @@ struct TimelineView: View {
                 let rectY = hourHeight * CGFloat(melatoninWindowStart)
                 let rectHeight = hourHeight * CGFloat(melatoninWindowEnd - melatoninWindowStart)
                 let leftPadding: CGFloat = 0
+                let rightPadding: CGFloat = 100
                 
                 RoundedRectangle(cornerRadius: 16)
                     .fill(LinearGradient(gradient: Gradient(colors: [Color.blue]), startPoint: .top, endPoint: .bottom))
-                    .frame(width: geometry.size.width - leftPadding, height: rectHeight - 3, alignment: .leading)
-                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding, y: rectY + rectHeight/2)
+                    .frame(width: geometry.size.width - leftPadding - rightPadding, height: rectHeight - 3, alignment: .leading)
+                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding - rightPadding / 2, y: rectY + rectHeight/2)
                     .shadow(radius: 6)
+                
+                Button(action: {
+                    showMelatoninWindowSheet = true
+                }) {
+                    HStack(spacing: 8) {
+                        Image(systemName: "moon.haze")
+                            .foregroundColor(.purple)
+                            .padding(.leading, 4)
+                        Text("Melatonin window")
+                            .foregroundColor(.white)
+                            .font(.footnote)
+                            .bold()
+                        Spacer()
+                    }
+                    .frame(width: 175)
+                    .padding(.vertical, 8)
+                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.gray))
+                }
+                .position(x: geometry.size.width  - 85, y: rectY + 20)
+                .sheet(isPresented: $showMelatoninWindowSheet) {
+                    MelatoninWindowSheet()
+                        .presentationDetents([.medium, .large])
+                }
                     
                 
                 VStack(alignment: .leading, spacing: 3) {
@@ -361,7 +456,7 @@ struct TimelineView: View {
                     }
                        
                 }
-                .position(x: (geometry.size.width ) / 2 - 55, y: rectY + 35)
+                .position(x: (geometry.size.width ) / 2 - 75, y: rectY + 35)
                 
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Sleep Need")
@@ -375,9 +470,8 @@ struct TimelineView: View {
                    
                        
                 }
-                .position(x: (geometry.size.width ) / 2 - 85, y: rectY + 35 + rectHeight - 4)
+                .position(x: (geometry.size.width ) / 2 - 105, y: rectY + 35 + rectHeight - 4)
             }
-            .allowsHitTesting(false)
             
             VStack(spacing: 30) {
                 ForEach(0..<37) { hour in
