@@ -4,31 +4,43 @@ import SwiftUI
 struct AvoidCaffeineInfoSheet: View {
     @State private var reminderOn = true
     @State private var reminderTimeHours = 10
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationView {
             VStack(spacing: 24) {
+                
                 // Header
-                VStack(spacing: 8) {
+                HStack {
                     Image(systemName: "cup.and.saucer.fill")
                         .resizable()
                         .frame(width: 40, height: 40)
                         .foregroundColor(.orange)
+                        .padding()
                     
-                    Text("Caffeine Cutoff")
-                        .font(.title2)
-                        .bold()
-                    
-                    Text("13:50")
-                        .font(.title3)
-                        .foregroundColor(.gray)
+                    VStack(alignment: .leading) {
+                       
+                        Text("Caffeine Cutoff")
+                            .font(.title2)
+                            .bold()
+                        
+                        Text("13:50")
+                            .font(.title3)
+                            .foregroundColor(.gray)
+                            .bold()
+                    }
+                    Spacer()
                 }
-                .padding(.top, 20)
+                .frame(height: 100)
+                .background(LinearGradient(gradient: Gradient(colors: [Color.black, Color.orange.opacity(0.3)]), startPoint: .top, endPoint: .bottom))
+               
 
                 // Settings Section
                 VStack(alignment: .leading, spacing: 16) {
                     Text("Settings")
-                        .font(.headline)
+                        .font(.title3)
+                        .padding(.vertical, 20)
+                        .bold()
 
                     Toggle(isOn: $reminderOn) {
                         VStack(alignment: .leading) {
@@ -43,8 +55,13 @@ struct AvoidCaffeineInfoSheet: View {
                         ReminderTimePicker(reminderTimeHours: $reminderTimeHours)
                     } label: {
                         HStack {
+                            Image(systemName: "clock.fill")
+                                .foregroundStyle(.gray)
+
                             VStack(alignment: .leading) {
                                 Text("Reminder Time")
+                                    .foregroundColor(.white)
+                                
                                 Text("Before melatonin window")
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
@@ -52,27 +69,53 @@ struct AvoidCaffeineInfoSheet: View {
                             Spacer()
                             Text("\(reminderTimeHours)h")
                                 .foregroundColor(.gray)
+                            Image(systemName: "chevron.right")
+                                .foregroundStyle(.white)
                         }
                     }
                 }
                 .padding()
-                .background(Color(.secondarySystemBackground))
-                .cornerRadius(16)
-
+                
                 Spacer()
-
-                // Learn more
-                NavigationLink("Learn more") {
-                    Text("Detailed info goes here.")
-                        .navigationTitle("Learn more")
+            
+                HStack {
+                    
+                    Text("Learn more")
+                        .foregroundColor(.white)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right")
+                        .foregroundStyle(.white)
                 }
-                .font(.subheadline)
-                .foregroundColor(.blue)
-
+                .padding()
+        
+                Spacer()
                 Spacer()
             }
-            .padding()
             .navigationTitle("Caffeine Cutoff")
+            .toolbarBackground(Color.gray.opacity(0.2), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.gray.opacity(0.4))
+                                    .frame(width: 35, height: 35)
+                                Image(systemName: "xmark")
+                                    .frame(width: 15, height: 15)
+                                    .foregroundColor(.primary)
+                                    .padding()
+                            }
+                        }
+                    }
+                }
+            }
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -92,3 +135,9 @@ struct ReminderTimePicker: View {
         .navigationTitle("Reminder Time")
     }
 }
+
+
+#Preview {
+    AvoidCaffeineInfoSheet()
+}
+

@@ -234,7 +234,7 @@ struct TimelineView: View {
                 .position(x: geometry.size.width  - 85, y: rectY + rectHeight/2)
                 .sheet(isPresented: $showAvoidCaffeineSheet) {
                     AvoidCaffeineInfoSheet()
-                        .presentationDetents([.medium, .large])
+                        .presentationDetents([.large])
                 }
                 
                 VStack(alignment: .leading, spacing: 3) {
