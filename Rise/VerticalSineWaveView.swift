@@ -5,8 +5,6 @@ struct DataPoint {
     let value: Double
 }
 
-
-
 struct DataDrivenCurve: Shape {
     let dataPoints: [DataPoint]
     
@@ -111,6 +109,47 @@ struct DataDrivenCurve: Shape {
     }
 }
 
+// Example usage with fade effect
+struct FadingCurveView: View {
+    let sampleData = [
+        DataPoint(time: 0, value: 0.0),
+        DataPoint(time: 1, value: 0.5),
+        DataPoint(time: 2, value: -0.3),
+        DataPoint(time: 3, value: 0.8),
+        DataPoint(time: 4, value: -0.2),
+        DataPoint(time: 5, value: 0.6),
+        DataPoint(time: 6, value: -0.4),
+        DataPoint(time: 7, value: 0.1)
+    ]
+    
+    var body: some View {
+        GeometryReader { geometry in
+            DataDrivenCurve(dataPoints: sampleData)
+                .stroke(Color.blue, lineWidth: 3)
+                .mask(
+                    // Create a linear gradient mask for fade effect
+                    LinearGradient(
+                        gradient: Gradient(stops: [
+                            .init(color: .black, location: 0.0),     // Full opacity at start
+                            .init(color: .black, location: 0.7),     // Full opacity until 70%
+                            .init(color: .clear, location: 1.0)      // Fade to transparent at end
+                        ]),
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+        }
+        .frame(width: 300, height: 400)
+        .background(Color.gray.opacity(0.1))
+    }
+}
+
+
 #Preview {
-    VerticalSineWaveView()
+    VStack(spacing: 30) {
+      
+        FadingCurveView()
+       
+    }
+    .padding()
 }

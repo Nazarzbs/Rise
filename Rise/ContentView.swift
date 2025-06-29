@@ -13,8 +13,13 @@ struct VerticalSineWaveView: View {
         DataPoint(time: 12, value: -1.5),
         DataPoint(time: 13, value: 0.2),
         DataPoint(time: 14, value: 0.5),
-        DataPoint(time: 15, value: -0.2),
-        DataPoint(time: 16, value: -1.5)
+        DataPoint(time: 15, value: 0.2),
+        DataPoint(time: 16, value: -0.1),
+        DataPoint(time: 17, value: -1.4),
+        DataPoint(time: 18, value: -1.4),
+        DataPoint(time: 19, value: -1.4),
+        DataPoint(time: 20, value: -1.5),
+        DataPoint(time: 21, value: -1.5)
     ]
     
     var body: some View {
@@ -23,9 +28,10 @@ struct VerticalSineWaveView: View {
             VStack(spacing: 0) {
 
                     // Data-driven curved graph
-                    DataDrivenCurve(dataPoints: dataPoints)
+                DataDrivenCurve(dataPoints: dataPoints)
+                   
                         .stroke(
-                            LinearGradient(colors: [.blue, .cyan, .green, .blue],
+                            LinearGradient(colors: [.purple, .cyan, .green, .purple],
                                          startPoint: .top,
                                          endPoint: .bottom),
                             lineWidth: 3
@@ -37,71 +43,85 @@ struct VerticalSineWaveView: View {
     }
 }
 
+
 struct ContentView: View {
+    @State private var showSheet = true
+    @State private var selectedTab = 2
+    
     var body: some View {
-        TabView {
-            
-            // Home Tab
-            VStack {
-                Spacer()
-                Text("Home View Coming Soon")
-                    .foregroundColor(.gray)
-                    .font(.title2)
-                Spacer()
-            }
-            .tabItem {
-                Image(systemName: "house.fill")
-                Text("Home")
-            }
-            
-            // Progress Tab
-            VStack {
-                Spacer()
-                Text("Progress View Coming Soon")
-                    .foregroundColor(.gray)
-                    .font(.title2)
-                Spacer()
-            }
-            .tabItem {
-                Image(systemName: "chart.line.uptrend.xyaxis")
-                Text("Progress")
-            }
-            
-            // Energy Tab (actual working view)
+        VStack {
             EnergyView()
-                .tabItem {
-                    Image(systemName: "calendar.day.timeline.left")
-                    Text("Energy")
+        }
+        .sheet(isPresented: .constant(true)) {
+            TabView(selection: $selectedTab) {
+                
+                // Home Tab
+                VStack {
+                    Spacer()
+                    Text("Home View Coming Soon")
+                        .foregroundColor(.gray)
+                        .font(.title2)
+                    Spacer()
                 }
-            
-            // Tools Tab
-            VStack {
-                Spacer()
-                Text("Tools View Coming Soon")
-                    .foregroundColor(.gray)
-                    .font(.title2)
-                Spacer()
+                .tabItem {
+                    Image(systemName: "house.fill")
+                    Text("Home")
+                }
+                
+                // Progress Tab
+                VStack {
+                    Spacer()
+                    Text("Progress View Coming Soon")
+                        .foregroundColor(.gray)
+                        .font(.title2)
+                    Spacer()
+                }
+                .tabItem {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                    Text("Progress")
+                }
+                
+                // Energy Tab (actual working view)
+                SheetView()
+                    .tabItem {
+                        Image(systemName: "calendar.day.timeline.left")
+                        Text("Energy")
+                    }
+                    .tag(2)
+                
+                // Tools Tab
+                VStack {
+                    Spacer()
+                    Text("Tools View Coming Soon")
+                        .foregroundColor(.gray)
+                        .font(.title2)
+                    Spacer()
+                }
+                .tabItem {
+                    Image(systemName: "briefcase.fill")
+                    Text("Tools")
+                }
+                
+                // Guidance Tab
+                VStack {
+                    Spacer()
+                    Text("Guidance View Coming Soon")
+                        .foregroundColor(.gray)
+                        .font(.title2)
+                    Spacer()
+                }
+                .tabItem {
+                    Image(systemName: "bubble.left.and.bubble.right.fill")
+                    Text("Guidance")
+                }
             }
-            .tabItem {
-                Image(systemName: "briefcase.fill")
-                Text("Tools")
-            }
-            
-            // Guidance Tab
-            VStack {
-                Spacer()
-                Text("Guidance View Coming Soon")
-                    .foregroundColor(.gray)
-                    .font(.title2)
-                Spacer()
-            }
-            .tabItem {
-                Image(systemName: "bubble.left.and.bubble.right.fill")
-                Text("Guidance")
-            }
+            .presentationDetents([.height(120)])
+            .presentationDragIndicator(.visible)
+            .presentationBackgroundInteraction(.enabled) // Allows interaction with background
         }
     }
 }
+
 
 struct EnergyView: View {
     // Mock data
@@ -225,7 +245,7 @@ struct TimelineView: View {
                         RoundedRectangle(cornerRadius: 16)
                             .fill(LinearGradient(gradient: Gradient(colors: [Color.purple.opacity(0.65), Color.blue.opacity(0.65)]), startPoint: .top, endPoint: .bottom))
                             .frame(width: 100, height: rectHeight, alignment: .leading)
-                            .position(x: 142,y: rectY + rectHeight/2)
+                            .position(x: 146,y: rectY + rectHeight/2)
                             .shadow(radius: 6)
                         
                         Text("Phone")
@@ -669,7 +689,8 @@ struct TimelineView: View {
             GeometryReader { geometry in
                 let hourHeight = geometry.size.height / 36
                 VerticalSineWaveView()
-                    .frame(height: hourHeight * 36, alignment: .leading)
+                    .frame(height: hourHeight * 32, alignment: .leading)
+                    .position(x: 190, y: hourHeight * 27 + 100)
                     .zIndex(1)
             }
         }
