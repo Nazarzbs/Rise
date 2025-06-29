@@ -7,16 +7,39 @@
 
 import SwiftUI
 
+struct VerticalSineWaveView: View {
+    // Sample data - replace with your actual data
+    let dataPoints = [
+        DataPoint(time: 12, value: -1.5),
+        DataPoint(time: 13, value: 0.2),
+        DataPoint(time: 14, value: 0.5),
+        DataPoint(time: 15, value: -0.2),
+        DataPoint(time: 16, value: -1.5)
+    ]
+    
+    var body: some View {
+        ZStack {
+         
+            VStack(spacing: 0) {
+
+                    // Data-driven curved graph
+                    DataDrivenCurve(dataPoints: dataPoints)
+                        .stroke(
+                            LinearGradient(colors: [.blue, .cyan, .green, .blue],
+                                         startPoint: .top,
+                                         endPoint: .bottom),
+                            lineWidth: 3
+                        )
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                }
+                .padding(.horizontal, 20)
+        }
+    }
+}
+
 struct ContentView: View {
     var body: some View {
         TabView {
-            
-            // Energy Tab (actual working view)
-            EnergyView()
-                .tabItem {
-                    Image(systemName: "calendar.day.timeline.left")
-                    Text("Energy")
-                }
             
             // Home Tab
             VStack {
@@ -44,7 +67,12 @@ struct ContentView: View {
                 Text("Progress")
             }
             
-            
+            // Energy Tab (actual working view)
+            EnergyView()
+                .tabItem {
+                    Image(systemName: "calendar.day.timeline.left")
+                    Text("Energy")
+                }
             
             // Tools Tab
             VStack {
@@ -106,6 +134,10 @@ struct EnergyView: View {
                         Text("\(currentEnergy)%")
                             .font(.headline)
                             .foregroundColor(.green)
+                        
+                        Circle()
+                            .frame(width: 13, height: 13)
+                            .foregroundColor(.green)
                     }
                 }
                 Spacer()
@@ -157,7 +189,7 @@ struct TimelineView: View {
     
     var body: some View {
         ZStack(alignment: .leading) {
-   
+           
             // Time ruler
             // Sleep period background
             GeometryReader { geometry in
@@ -179,24 +211,112 @@ struct TimelineView: View {
                     Spacer().frame(height: 8)
                 }
                 .position(x: (geometry.size.width ) / 2 - 75 , y: rectY - 30)
-              
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(LinearGradient(gradient: Gradient(colors: [Color.purple.opacity(0.65), Color.blue.opacity(0.65)]), startPoint: .top, endPoint: .bottom))
-                    .frame(width: geometry.size.width - leftPadding, height: rectHeight, alignment: .leading)
-                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding, y: rectY + rectHeight/2)
-                    .shadow(radius: 6)
                 
-                VStack {
+              
+                HStack(spacing: 0) {
+                    RoundedRectangle(cornerRadius: 16)
+                        .strokeBorder(Color.white.opacity(1))
+                        .fill(LinearGradient(gradient: Gradient(colors: [Color.purple.opacity(0.65), Color.blue.opacity(0.65)]), startPoint: .top, endPoint: .bottom))
+                        .frame(width: geometry.size.width - leftPadding - 100, height: rectHeight, alignment: .leading)
+                        .position(x: (geometry.size.width - leftPadding) / 2 - 15 + 1, y: rectY + rectHeight/2)
+                        .shadow(radius: 6)
+                    ZStack {
+                   
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(LinearGradient(gradient: Gradient(colors: [Color.purple.opacity(0.65), Color.blue.opacity(0.65)]), startPoint: .top, endPoint: .bottom))
+                            .frame(width: 100, height: rectHeight, alignment: .leading)
+                            .position(x: 142,y: rectY + rectHeight/2)
+                            .shadow(radius: 6)
+                        
+                        Text("Phone")
+                                .position(x: 142,y: rectY + 13)
+                                
+                    }
+                }
+                
+                VStack(spacing: 0) {
                     RoundedRectangle(cornerRadius: 16)
                         .frame(width: 60, height: 5)
                         .foregroundColor(.purple)
                     
-                    Text("4h 18m")
-                        .font(.headline)
-                        .foregroundColor(.white)
+                    HStack {
+                        Image(systemName: "zzz")
+                            .frame(width: 20, height: 20)
+                        Text("4:18")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                    }
                        
                 }
-                .position(x: (geometry.size.width ) / 2 - 85 , y: rectY + 15)
+                .position(x: (geometry.size.width) / 2 - 85 , y: rectY + 15)
+                
+                VStack(spacing: 0) {
+                  
+                    HStack {
+                       
+                        Text("11:09")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                        Image(systemName: "sun.max.fill")
+                            .frame(width: 20, height: 20)
+                    }
+                    
+                    RoundedRectangle(cornerRadius: 16)
+                        .frame(width: 70, height: 5)
+                        .foregroundColor(.purple)
+                       
+                }
+                .position(x: (geometry.size.width) / 2 + 35, y: rectY + rectHeight - 15)
+                
+                
+                
+                HStack {
+                    Image(systemName: "scissors")
+                        .frame(width: 20, height: 20)
+                    Text("Press to add awake time")
+                        .bold()
+                        .font(.footnote)
+                        .foregroundColor(.white)
+                        
+                }
+                .position(x: (geometry.size.width ) / 2 - 25 , y: rectY * 2)
+            }
+            .zIndex(1000)
+            
+            
+            GeometryReader { geometry in
+                let totalHours: CGFloat = 36
+                let hourHeight = geometry.size.height / totalHours
+                let rectY = hourHeight * CGFloat(11)
+                let rectHeight = hourHeight * CGFloat(13 - 11)
+                let leftPadding: CGFloat = 0
+                let rightPadding: CGFloat = 100
+                
+                Image(.groggsness)
+                    .resizable()
+                    .frame(width: geometry.size.width - leftPadding - rightPadding,
+                           height: rectHeight - 8,
+                           alignment: .leading)
+                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding - rightPadding / 2,
+                              y: rectY + rectHeight / 2 + 2)
+                    .shadow(radius: 6)
+                    .mask(
+                        RoundedRectangle(cornerRadius: 20)
+                            .frame(width: geometry.size.width - leftPadding - rightPadding,
+                                   height: rectHeight - 8)
+                            .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding - rightPadding / 2,
+                                      y: rectY + rectHeight / 2 + 2)
+                    )
+                    .zIndex(-1)
+                    
+                
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Grogginess")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                    
+                }
+                .position(x: (geometry.size.width ) / 2 - 95 , y: rectY + 20)
                 
             }
             
@@ -228,8 +348,8 @@ struct TimelineView: View {
                         Spacer()
                     }
                     .frame(width: 175)
-                    .padding(.vertical, 8)
-                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.gray))
+                    .padding(.vertical, 2)
+                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.init(uiColor: .systemGray5)))
                 }
                 .position(x: geometry.size.width  - 85, y: rectY + rectHeight/2)
                 .sheet(isPresented: $showAvoidCaffeineSheet) {
@@ -242,6 +362,16 @@ struct TimelineView: View {
                         .font(.headline)
                         .foregroundColor(.white)
                     
+                    HStack(spacing: 0) {
+                        Circle()
+                            .frame(width: 6, height: 6)
+                        
+                        RoundedRectangle(cornerRadius: 16)
+                            .frame(width: geometry.size.width, height: 1, alignment: .trailing)
+                        
+                    }
+                    .offset(x: -10)
+                    
                     HStack {
                         Circle()
                             .frame(width: 8, height: 8)
@@ -252,8 +382,10 @@ struct TimelineView: View {
                     }
                 
                 }
-                .position(x: (geometry.size.width ) / 2 - 85 , y: rectY + 35)
+                .position(x: geometry.size.width - 141, y: rectY + 35)
+               
             }
+            .zIndex(1000)
             
             GeometryReader { geometry in
                 let totalHours: CGFloat = 36
@@ -286,8 +418,9 @@ struct TimelineView: View {
                     }
                        
                 }
-                .position(x: (geometry.size.width ) / 2 - 85, y: rectY + 35)
+                .position(x: (geometry.size.width ) / 2 - 95, y: rectY + 35)
             }
+            .zIndex(1000)
             
             GeometryReader { geometry in
                 let totalHours: CGFloat = 36
@@ -317,13 +450,13 @@ struct TimelineView: View {
                         Spacer()
                     }
                     .frame(width: 175)
-                    .padding(.vertical, 8)
-                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.gray))
+                    .padding(.vertical, 2)
+                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.init(uiColor: .systemGray5)))
                 }
                 .position(x: geometry.size.width  - 85, y: rectY + rectHeight/2)
                 .sheet(isPresented: $showPeakActivitiesSheet) {
                     PeakActivitiesSheet()
-                        .presentationDetents([.medium, .large])
+                        .presentationDetents([.large])
                 }
                     
                 
@@ -343,8 +476,9 @@ struct TimelineView: View {
                     }
                        
                 }
-                .position(x: (geometry.size.width ) / 2 - 85, y: rectY + 35)
+                .position(x: (geometry.size.width ) / 2 - 95, y: rectY + 35)
             }
+            .zIndex(1000)
             
             GeometryReader { geometry in
                 let totalHours: CGFloat = 36
@@ -374,13 +508,13 @@ struct TimelineView: View {
                         Spacer()
                     }
                     .frame(width: 175)
-                    .padding(.vertical, 8)
-                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.gray))
+                    .padding(.vertical, 2)
+                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.init(uiColor: .systemGray5)))
                 }
                 .position(x: geometry.size.width  - 85, y: rectY + rectHeight/2)
                 .sheet(isPresented: $showWindDownSheet) {
                     WindDownSheet()
-                        .presentationDetents([.medium, .large])
+                        .presentationDetents([.large])
                 }
                 
                 VStack(alignment: .leading, spacing: 3) {
@@ -399,8 +533,9 @@ struct TimelineView: View {
                     }
                        
                 }
-                .position(x: (geometry.size.width ) / 2 - 85, y: rectY + 35)
+                .position(x: (geometry.size.width ) / 2 - 105, y: rectY + 35)
             }
+            .zIndex(1000)
             
             GeometryReader { geometry in
                 let totalHours: CGFloat = 36
@@ -410,11 +545,22 @@ struct TimelineView: View {
                 let leftPadding: CGFloat = 0
                 let rightPadding: CGFloat = 100
                 
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(LinearGradient(gradient: Gradient(colors: [Color.blue]), startPoint: .top, endPoint: .bottom))
-                    .frame(width: geometry.size.width - leftPadding - rightPadding, height: rectHeight - 3, alignment: .leading)
-                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding - rightPadding / 2, y: rectY + rectHeight/2)
+                Image(.melatonin)
+                    .resizable()
+                    .frame(width: geometry.size.width - leftPadding - rightPadding,
+                           height: rectHeight - 8,
+                           alignment: .leading)
+                    .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding - rightPadding / 2,
+                              y: rectY + rectHeight / 2 + 2)
                     .shadow(radius: 6)
+                    .mask(
+                        RoundedRectangle(cornerRadius: 20)
+                            .frame(width: geometry.size.width - leftPadding - rightPadding,
+                                   height: rectHeight - 8)
+                            .position(x: (geometry.size.width - leftPadding) / 2 + leftPadding - rightPadding / 2,
+                                      y: rectY + rectHeight / 2 + 2)
+                    )
+//                    .zIndex(-1)
                 
                 Button(action: {
                     showMelatoninWindowSheet = true
@@ -429,17 +575,19 @@ struct TimelineView: View {
                             .bold()
                         Spacer()
                     }
+                   
                     .frame(width: 175)
-                    .padding(.vertical, 8)
-                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.gray))
+                    .padding(.vertical, 2)
+                    .background(RoundedRectangle(cornerRadius: 4).fill(Color.init(uiColor: .systemGray5)))
                 }
-                .position(x: geometry.size.width  - 85, y: rectY + 20)
+                .position(x: geometry.size.width  - 85, y: rectY + 13)
                 .sheet(isPresented: $showMelatoninWindowSheet) {
                     MelatoninWindowSheet()
-                        .presentationDetents([.medium, .large])
+                        .presentationDetents([.large])
                 }
-                    
-                
+               
+               
+              
                 VStack(alignment: .leading, spacing: 3) {
                     Text("Melatonin Window")
                         .font(.headline)
@@ -453,7 +601,9 @@ struct TimelineView: View {
                         Text("6m letter")
                             .font(.footnote)
                             .foregroundColor(.white)
+                           
                     }
+                    .offset(x: 30)
                        
                 }
                 .position(x: (geometry.size.width ) / 2 - 75, y: rectY + 35)
@@ -502,6 +652,7 @@ struct TimelineView: View {
                 }
             }
             .padding(.leading, 6)
+            .zIndex(1000)
             
             GeometryReader { geometry in
                 let hourHeight = geometry.size.height / 36
@@ -509,8 +660,20 @@ struct TimelineView: View {
                     .frame(width: 3, height: hourHeight * 36, alignment: .leading)
                     .foregroundStyle(.black)
                     .position(x: 34, y: hourHeight * 18)
+                Spacer()
+                
+                UsageBarView()
+                    .position(x: geometry.size.width - 48, y: 934)
+            }
+            
+            GeometryReader { geometry in
+                let hourHeight = geometry.size.height / 36
+                VerticalSineWaveView()
+                    .frame(height: hourHeight * 36, alignment: .leading)
+                    .zIndex(1)
             }
         }
+        
     }
 }
 

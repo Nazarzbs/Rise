@@ -1,31 +1,37 @@
 import SwiftUI
 
 struct PeakActivitiesSheet: View {
+    @Environment(\.dismiss) var dismiss
+    
     var body: some View {
         NavigationView {
-            VStack(spacing: 24) {
+            VStack(spacing: 44) {
                 // Header icon + title
-                VStack(spacing: 12) {
+                HStack() {
                     Image(systemName: "calendar.badge.clock") // Placeholder icon
                         .resizable()
                         .frame(width: 40, height: 40)
                         .foregroundColor(.pink)
+                       
 
                     Text("Evening Routine")
                         .font(.title2)
                         .bold()
+                    
+                    Spacer()
                 }
+                .padding(.horizontal)
                 .padding(.top, 20)
 
                 // Description
-                VStack(spacing: 8) {
+                VStack(alignment: .leading, spacing: 10) {
                     Text("Think less at the end of the day")
                         .font(.headline)
 
                     Text("Add activities for a typical weekday night and we’ll organize your evening to match your daily energy levels.")
-                        .font(.subheadline)
+                        .font(.footnote)
                         .foregroundColor(.gray)
-                        .multilineTextAlignment(.center)
+                        .multilineTextAlignment(.leading)
                 }
                 .padding(.horizontal)
 
@@ -34,48 +40,69 @@ struct PeakActivitiesSheet: View {
                     // Handle add activities
                 }) {
                     Text("ADD ACTIVITIES")
-                        .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                         .padding()
-                        .background(Color.purple)
+                        .background(Color.red)
                         .foregroundColor(.white)
-                        .cornerRadius(12)
+                        .cornerRadius(8)
                 }
                 .padding(.horizontal)
-
-                Spacer()
-
+              
                 // Settings and Learn More
                 VStack(spacing: 1) {
                     NavigationLink(destination: Text("Settings view goes here")) {
                         HStack {
                             Text("Settings")
+                                .foregroundColor(.white)
                             Spacer()
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
+                                .foregroundColor(.white)
                         }
                         .padding()
-                        .background(Color(.secondarySystemBackground))
+                        
                     }
 
                     NavigationLink(destination: Text("Learn more view goes here")) {
                         HStack {
                             Text("Learn more")
+                                .foregroundColor(.white)
                             Spacer()
                             Image(systemName: "chevron.right")
-                                .foregroundColor(.gray)
+                                .foregroundColor(.white)
                         }
                         .padding()
-                        .background(Color(.secondarySystemBackground))
+                       
                     }
                 }
                 .cornerRadius(12)
                 .padding(.horizontal)
-
+                .padding(.top, 50)
+               
                 Spacer()
             }
-            .padding()
             .navigationTitle("Evening Routine")
+            .toolbarBackground(Color.gray.opacity(0.2), for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    HStack {
+                        Spacer()
+                        Button(action: {
+                            dismiss()
+                        }) {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.gray.opacity(0.4))
+                                    .frame(width: 35, height: 35)
+                                Image(systemName: "xmark")
+                                    .frame(width: 15, height: 15)
+                                    .foregroundColor(.primary)
+                                    .padding()
+                            }
+                        }
+                    }
+                }
+            }
             .navigationBarTitleDisplayMode(.inline)
         }
     }
